@@ -121,3 +121,83 @@ g_initable_init (GInitable     *initable,
 ```
 
 是否能通过，静态分析或者符号执行的方式找到terminal_factory_proxy_new_for_bus_sync函数返回NULL的详细路径。
+
+
+
+```
+上面各个函数都在glib2这个软件包的源代码里面，对应下面的动态链接库。
+
+[abc@arh_test ~]$ ldd /usr/bin/gnome-terminal  | grep gio
+        libgio-2.0.so.0 => /usr/lib/libgio-2.0.so.0 (0x00007fbdc6604000)
+
+[abc@arh_test ~]$ nm -D /usr/lib/libgio-2.0.so.0 | grep -w  g_initable_new
+0000000000061880 T g_initable_new
+[abc@arh_test ~]$
+
+[abc@arh_test ~]$ nm -D /usr/lib/libgio-2.0.so.0 | grep -w  g_initable_new_valist
+00000000000617d0 T g_initable_new_valist
+
+[abc@arh_test ~]$ nm -D /usr/lib/libgio-2.0.so.0 | grep -w  g_object_new_valist
+                 U g_object_new_valist
+
+
+[abc@arh_test ~]$ nm -D /usr/lib/libgobject-2.0.so  | grep g_object_new_valist 
+0000000000017290 T g_object_new_valist
+
+
+
+[abc@arh_test ~]$ nm -D /usr/lib/libgio-2.0.so.0 | grep -w  g_initable_init 
+0000000000061690 T g_initable_init
+
+
+
+
+
+[abc@arh_test src]$ ldd /usr/bin/gnome-terminal  | grep glib
+        libglib-2.0.so.0 => /usr/lib/libglib-2.0.so.0 (0x00007f407cd0d000)
+
+
+ 
+
+[abc@arh_test ~]$ ldd /usr/bin/gnome-terminal  | grep gob
+        libgobject-2.0.so.0 => /usr/lib/libgobject-2.0.so.0 (0x00007f79e25b7000)
+
+
+
+
+glib2 /usr/lib/libgio-2.0.so
+glib2 /usr/lib/libgio-2.0.so.0
+glib2 /usr/lib/libgio-2.0.so.0.5400.3
+glib2 /usr/lib/libglib-2.0.so
+glib2 /usr/lib/libglib-2.0.so.0
+glib2 /usr/lib/libglib-2.0.so.0.5400.3
+glib2 /usr/lib/libgmodule-2.0.so
+glib2 /usr/lib/libgmodule-2.0.so.0
+glib2 /usr/lib/libgmodule-2.0.so.0.5400.3
+glib2 /usr/lib/libgobject-2.0.so
+glib2 /usr/lib/libgobject-2.0.so.0
+glib2 /usr/lib/libgobject-2.0.so.0.5400.3
+glib2 /usr/lib/libgthread-2.0.so
+glib2 /usr/lib/libgthread-2.0.so.0
+glib2 /usr/lib/libgthread-2.0.so.0.5400.3
+
+
+
+[abc@arh_test glib]$ ldd /usr/lib/libgio-2.0.so.0
+        linux-vdso.so.1 (0x00007fff7bdd3000)
+        libgobject-2.0.so.0 => /usr/lib/libgobject-2.0.so.0 (0x00007f08399dc000)
+        libgmodule-2.0.so.0 => /usr/lib/libgmodule-2.0.so.0 (0x00007f08397d8000)
+        libglib-2.0.so.0 => /usr/lib/libglib-2.0.so.0 (0x00007f08394c3000)
+        libpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f08392a5000)
+        libz.so.1 => /usr/lib/libz.so.1 (0x00007f083908e000)
+        libresolv.so.2 => /usr/lib/libresolv.so.2 (0x00007f0838e77000)
+        libmount.so.1 => /usr/lib/libmount.so.1 (0x00007f0838c21000)
+        libc.so.6 => /usr/lib/libc.so.6 (0x00007f083886a000)
+        libffi.so.6 => /usr/lib/libffi.so.6 (0x00007f0838661000)
+        libdl.so.2 => /usr/lib/libdl.so.2 (0x00007f083845d000)
+        libpcre.so.1 => /usr/lib/libpcre.so.1 (0x00007f08381ea000)
+        /usr/lib64/ld-linux-x86-64.so.2 (0x00007f0839fdd000)
+        libblkid.so.1 => /usr/lib/libblkid.so.1 (0x00007f0837f9c000)
+        libuuid.so.1 => /usr/lib/libuuid.so.1 (0x00007f0837d95000)
+        librt.so.1 => /usr/lib/librt.so.1 (0x00007f0837b8d000)
+```
