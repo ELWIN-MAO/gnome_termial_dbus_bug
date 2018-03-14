@@ -17,7 +17,8 @@ https://gitlab.gnome.org/GNOME/glib/tree/5a650925899c7aae62e9ff79e405e72a6adc981
 [abc@arh_test ~]$ gnome-terminal 
 Error constructing proxy for org.gnome.Terminal:/org/gnome/Terminal/Factory0: Error calling StartServiceByName for org.gnome.Terminal: Timeout was reached
 
-初步分析知道出错的原因是gnome-termial和dbus-daemon进程通信的时候出错了，没有让dbus-deamon进程帮助其启动起来 org.gnome.Terminal这个服务对应的gnome-termial这个进程。
+初步分析知道出错的原因是gnome-termial和dbus-daemon进程通信的时候出错了，没有让dbus-deamon进程
+帮助其启动起来 org.gnome.Terminal这个服务对应的gnome-termial这个进程。
 
 pacman -Ql gnome-terminal  |less
 gnome-terminal软件包中比较重要的文件
